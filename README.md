@@ -1,4 +1,4 @@
-# Tool Unload/Load failsafe check for UCCNC using RapidATC whitout the ir function
+# Use a Tool Setter Probe in UCCNC with RapidATC (No IR Beam)
 
 How to use in M6 macro on UCCNC RapidATC.
 
