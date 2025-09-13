@@ -1,10 +1,8 @@
 # Tool Unload/Load failsafe check for UCCNC using RapidATC whitout the ir function
 
-How to use in M6 RapidATC:
+How to use in M6 macro on UCCNC RapidATC.
 
-Add to the end of M6.txt in UCCNC using RapidATC.
-Add Code in M6Ex.txt to the end of M6 in your profile.
-
+Add the code in M6Ex.txt to the end of M6 in your profile.
 
 Edit the code in function HandleToolRecognitionUnload() 
 
