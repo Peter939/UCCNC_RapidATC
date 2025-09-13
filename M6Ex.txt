@@ -91,7 +91,7 @@ void CheckATC_DropLoad(bool IsLoad)
             // Visa info i statuslistan
             exec.AddStatusmessage(
             "Touch: Z(work)=" + zTouchWork.ToString(System.Globalization.CultureInfo.InvariantCulture) +
-            " [sparat #100], Z(machine)=" + zTouchMac.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            " Z(machine)=" + zTouchMac.ToString(System.Globalization.CultureInfo.InvariantCulture)
             );
     }
 }
@@ -112,4 +112,5 @@ void DoStopOnFail(string Message)
    exec.Callbutton(523);
    MessageBox.Show(Message);
    return;
+
 }
