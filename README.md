@@ -1,8 +1,9 @@
 # UCCNC_RapidATC
 Macros for UCCNC and RapidATC
 
-How to use in M6 RapidATC
-Macro to add to the end of M6.txt in UCCNC using RapidATC.
+How to use in M6 RapidATC:
+
+Add to the end of M6.txt in UCCNC using RapidATC.
 Add Code in M6Ex.txt to the end of M6 in your profile.
 
 
