@@ -7,6 +7,7 @@ Add Code in M6Ex.txt to the end of M6 in your profile.
 
 In void HandleToolRecognitionUnload() 
 add the row CheckATC_DropLoad after MessageBox.Show Ex.
+
     if (!ToolRecognitionOverride)
     {
       // MessageBox.Show("Confirm tool unloaded and press OK to continue.", "Confirm Unload");
@@ -15,7 +16,8 @@ add the row CheckATC_DropLoad after MessageBox.Show Ex.
 And the same for:
 void HandleToolRecognitionLoad()
 
- if (!ToolRecognitionOverride)
+
+    if (!ToolRecognitionOverride)
     {
        // MessageBox.Show("Confirm tool loaded and press OK to continue.", "Confirm Load");
        CheckATC_DropLoad(true); // Run Tool load check.
