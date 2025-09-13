@@ -1,5 +1,4 @@
-# UCCNC_RapidATC
-Macros for UCCNC and RapidATC
+# Tool Unload/Load failsafe check for UCCNC using RapidATC whitout the ir function
 
 How to use in M6 RapidATC:
 
