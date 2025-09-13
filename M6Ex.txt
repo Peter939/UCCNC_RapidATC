@@ -1,0 +1,115 @@
+// Cretaed By Peter Johansson 2025-09-07
+// RapidATC Tool check for Tool load/unload using probe. 
+void CheckATC_DropLoad(bool IsLoad)
+{
+    bool USEDEBUG = true;
+    // --- CONFIG in mm ---
+    double TS_X_mc    = 29.298;      // tool setter X in machine coordinates, can be set to use RapidATC config param
+    double TS_Y_mc    = 571.298;     // tool setter Y in machine coordinates, can be set to use RapidATC config param
+    double SAFE_Z_mc  = -20;         // You SafeZ in machine coordinates
+    double UnloadMaxTravel  = 60.0;  // Max travel while not touching whit out nut.
+	double LoadMaxTravel  = 49.0;    // Max travel while not touching whith nut.
+	int SpeedToolCheck = 400;        // Speed Tool check..
+
+    // Set max travel For Load/Unload  
+    double PROBE_MAX_TRAVEL  = (IsLoad == false ? UnloadMaxTravel : LoadMaxTravel); // mm max down travel Unload and load
+
+    // Get current Tool.
+	int CurrentTool = (int) exec.Getvar(4120);
+    // Get New Tool.
+	int LoadTool = (int) exec.Getnewtool();
+	
+	// Debugg Show Max travel Load or Unload
+	if(USEDEBUG == true)
+	{
+       exec.AddStatusmessage("Max Travel (" + PROBE_MAX_TRAVEL + ") Load == " + IsLoad);
+    }
+	
+	// --- START ---
+    if (exec.Ismacrostopped()) return;
+
+    exec.Code("G21 G90");                        // mm, absolut
+    while (exec.IsMoving()) { } exec.Wait(150);
+
+    // 1) Goto SafeZ (maskinkoord)
+    exec.Code("G53 G0 Z" + SAFE_Z_mc.ToString(System.Globalization.CultureInfo.InvariantCulture));
+    while (exec.IsMoving()) { } exec.Wait(150);
+
+    // 2) Goto tool setern (maskinkoord)
+    exec.Code(
+      "G53 G0 X" + TS_X_mc.ToString(System.Globalization.CultureInfo.InvariantCulture) +
+      " Y" + TS_Y_mc.ToString(System.Globalization.CultureInfo.InvariantCulture)
+    );
+    while (exec.IsMoving()) { } exec.Wait(150);
+
+    // --- PROBING Zero---
+    double zTouchWork = 0.0; // Z i arbetskordinater vid träff
+    double zTouchMac  = 0.0; // Z i maskinkordinater vid träff
+
+
+
+    // G31
+    exec.Code("G91 G31 Z-" + PROBE_MAX_TRAVEL.ToString(System.Globalization.CultureInfo.InvariantCulture) + " F" + SpeedToolCheck);
+    
+	while (exec.IsMoving()) { } exec.Wait(50);
+
+    double status = exec.Getvar(5060); // 0=Probe was hit , 1=no hitt, 2=probe was activated on start
+    if (status == 0)
+    {
+        if(IsLoad) // Tool Loading
+        {
+              exec.AddStatusmessage("ATC Tool (" + LoadTool + ") load succsess.");
+        }
+        else  
+        {
+             DoStopOnFail("ATC unload tool (" + CurrentTool + ") fail, goto Park 1 feed hold.");  
+        }
+    }
+    else if (status == 1)
+    {
+      if(IsLoad)
+      {
+             DoStopOnFail("ATC Tool (" + LoadTool + ") load  Fail, goto park1 feed hold.");              
+	  }
+      else
+      {
+             exec.AddStatusmessage("ATC Unload tool (" + CurrentTool + ") succsess.");
+              
+      }
+    }
+    else if (status == 2)
+    {
+        DoStopOnFail("Probe already active on start check Break/Stopp ATC.");
+    }
+
+	// Goto safez RapidATC code.
+	LoadZero();
+
+    //Print debug info
+	if(USEDEBUG == true)
+    {
+            // Visa info i statuslistan
+            exec.AddStatusmessage(
+            "Touch: Z(work)=" + zTouchWork.ToString(System.Globalization.CultureInfo.InvariantCulture) +
+            " [sparat #100], Z(machine)=" + zTouchMac.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            );
+    }
+}
+
+// Show messages
+void DoStopOnFail(string Message)
+{
+   exec.AddStatusmessage(Message);
+   exec.Wait(150);
+   
+   // Goto Park 1 
+   exec.Code("M200"); 
+  
+   // Wait Move. 
+   while (exec.IsMoving()) { } exec.Wait(150);
+  
+   // Feed hold, wait for manual load/unload tool. 
+   exec.Callbutton(523);
+   MessageBox.Show(Message);
+   return;
+}
