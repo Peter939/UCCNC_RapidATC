@@ -1,7 +1,8 @@
 # Use a Tool Setter Probe in UCCNC with RapidATC (No IR Beam)
 
-How to use in M6 macro on UCCNC RapidATC.
+This macro code is for UCCNC but you can probably be adapted for other CNC control software such as Mach3, LinuxCNC and more.
 
+How to use in M6 macro in UCCNC using the RapidATC.
 Add the code in M6Ex.txt to the end of M6 in your profile.
 
 Edit the code in function HandleToolRecognitionUnload() 
